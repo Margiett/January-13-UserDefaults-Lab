@@ -40,6 +40,7 @@ class ViewController: UIViewController {
     
     
     private var horoscopePicker: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         nameTextField.delegate = self

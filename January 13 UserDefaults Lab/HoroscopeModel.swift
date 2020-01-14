@@ -14,3 +14,18 @@ struct Horoscope: Codable {
     var horoscope: String
    // var mood: String
 }
+
+//class UserPreference {
+//    
+//    // Why do we need this ??
+//    private init() {}
+//    
+//static let share = UserPreference()
+//    
+//    func updateHoroscope(with updatedSign: Horoscope) {
+//        
+//        UserDefaults.standard.set(updatedSign.rawValue, forKey: UserPreferenceKey
+//        )
+//    }
+//    
+//}
