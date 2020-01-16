@@ -11,7 +11,7 @@ import NetworkHelper
 
 struct APIClient {
     static func getHoroscope(sign:String,
-        completion: @escaping(Result <Horoscope, AppError>) -> ()) {
+        completion: @escaping(Result <HoroscopeModel, AppError>) -> ()) {
         
         let idEndpointUrl = "http://sandipbgt.com/theastrologer/api/horoscope/\(sign)/today"
 
@@ -29,7 +29,7 @@ struct APIClient {
                 completion(.failure(.networkClientError(appError)))
             case .success(let data):
                 do {
-                    let horoscopeAPI = try JSONDecoder().decode(Horoscope.self, from: data)
+                    let horoscopeAPI = try JSONDecoder().decode(HoroscopeModel.self, from: data)
                     completion(.success(horoscopeAPI))
                 } catch {
                     completion(.failure(.decodingError(error)))

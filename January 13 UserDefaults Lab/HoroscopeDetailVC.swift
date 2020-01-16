@@ -12,28 +12,74 @@ class HoroscopeDetailVC: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var horoscopeLabel: UILabel!
     @IBOutlet weak var horoscopeDetail: UITextView!
-    @IBOutlet weak var saveButton: UIButton!
     
-    var selectedHoroscope: Horoscope?
     
-    var name = ""
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        loadData()
-        nameLabel.text = name
+     var horoscope: HoroscopeModel?
         
-    }
-    func loadData() {
-        guard let horoscopeLoadData = selectedHoroscope else {
-            fatalError("the segue to the detail controller did not work please try again")
+        var currentZodiac = HoroscopeSign.Cancer.rawValue {
+            didSet{
+                getHoroscope()
+                UserPreference.shared.updateZodiac(with: currentZodiac)
+            }
         }
         
-        horoscopeLabel.text = selectedHoroscope?.sunsign
-        horoscopeDetail.text = selectedHoroscope?.horoscope
+    var userName = String(){
+        didSet {
+            UserPreference.shared.updatName(with: userName)
+            
+            
+        }
+    }
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            updateUI()
+            print(currentZodiac)
+        }
+        
+        func updateUI() {
+            if let updatedHoroscopeZodiac = UserPreference.shared.getUserZodiac() {
+                currentZodiac = updatedHoroscopeZodiac
+            }
+            if let PersonName = UserPreference.shared.getUserName() {
+                       userName = PersonName.capitalized
+                   }
+        }
+        
+        func getHoroscope(){
+            APIClient.getHoroscope(sign: currentZodiac.lowercased()) { [weak self] (result) in
+                switch result {
+                case .failure(let appError):
+                    print(appError)
+                    
+                case .success(let horoscope):
+                    self?.horoscope = horoscope
+                    DispatchQueue.main.async {
+                        self?.horoscopeLabel.text = horoscope.sunsign
+                        self?.horoscopeDetail.text = horoscope.horoscope
+                        self?.nameLabel.text = "\(self?.userName ?? "")'s Horoscope"
+                    }
+                    
+                }
+            }
+        }
+        
+        @IBAction func unwindSegue(segue: UIStoryboardSegue) {
+            guard let settingsVC = segue.source as? SettingsVC else {
+                fatalError("unwind segue does not work")
+                
+            }
+            currentZodiac = settingsVC.selectedZ
+            userName = settingsVC.userName
+   
+
+            
+            
+            
+            
+        }
+        
         
         
         
     }
-    
-}
