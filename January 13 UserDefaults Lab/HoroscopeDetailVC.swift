@@ -14,7 +14,7 @@ class HoroscopeDetailVC: UIViewController {
     @IBOutlet weak var horoscopeDetail: UITextView!
     
     
-     var horoscope: HoroscopeModel?
+     var horoscope: Horoscope?
         
         var currentZodiac = HoroscopeSign.Cancer.rawValue {
             didSet{
